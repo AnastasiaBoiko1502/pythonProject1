@@ -23,9 +23,6 @@ def create_nn(batch_size=200, learning_rate=0.01, epochs=10,
         ])),
         batch_size=batch_size, shuffle=True)
 
-    images, labels = next(iter(train_loader))
-    plt.imshow(images[0].reshape(28, 28), cmap="gray")
-    plt.show()
     class Net(nn.Module):
         def __init__(self):
             super(Net, self).__init__()
@@ -62,6 +59,12 @@ def create_nn(batch_size=200, learning_rate=0.01, epochs=10,
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, batch_idx * len(data), len(train_loader.dataset),
                            100. * batch_idx / len(train_loader), loss.item()))
+
+    images, labels = next(iter(train_loader))
+    a = 0
+    plt.imshow(images[a].reshape(28, 28), cmap="gray")
+    print("Predicted: ", net(images[a].view(-1, 28 * 28)), "True: ", labels[a])
+    plt.show()
 
     # run a test loop
     test_loss = 0
