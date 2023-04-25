@@ -1,0 +1,30 @@
+stages:
+  split:
+    cmd: python Razdelenie.py
+    deps:
+    - Razdelenie.py
+    params:
+    - split.number
+    outs:
+    - data/train_chunks
+    - data/data_filenames.csv
+
+  concat:
+    cmd: python Objedinenie.py
+    deps:
+    - Objedinenie.py
+    - data/train_chunks
+    - data/data_filenames.csv
+    outs:
+    - data/combined_data.pt
+
+  train:
+    cmd: python Laba2.py
+    deps:
+      - Laba2.py
+      - data/combined_data.pt
+    params:
+      - train.batch_size
+      - train.learning_rate
+      - train.epochs
+      - train.log_interval

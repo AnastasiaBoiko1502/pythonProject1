@@ -1,0 +1,51 @@
+schema: '2.0'
+stages:
+  split:
+    cmd: python Razdelenie.py
+    deps:
+    - path: Razdelenie.py
+      md5: b6565518d28e25b37545d4ba17194935
+      size: 2763
+    params:
+      params.yaml:
+        split.number: 6
+    outs:
+    - path: data/data_filenames.csv
+      md5: a5e5669c56eab468880482067a63b3af
+      size: 196
+    - path: data/train_chunks
+      md5: 67f34fec9c7105bed2bd7a75879033a8.dir
+      size: 285312378
+      nfiles: 6
+  concat:
+    cmd: python Objedinenie.py
+    deps:
+    - path: Objedinenie.py
+      md5: 129c15c18aadcf9a426782514cb9058f
+      size: 1118
+    - path: data/data_filenames.csv
+      md5: a5e5669c56eab468880482067a63b3af
+      size: 196
+    - path: data/train_chunks
+      md5: 67f34fec9c7105bed2bd7a75879033a8.dir
+      size: 285312378
+      nfiles: 6
+    outs:
+    - path: data/combined_data.pt
+      md5: a09843dbac09654f59b07400530d9e5a
+      size: 285307969
+  train:
+    cmd: python Laba2.py
+    deps:
+    - path: Laba2.py
+      md5: 2518103d9c00d8305d3235d373de1d87
+      size: 4083
+    - path: data/combined_data.pt
+      md5: a09843dbac09654f59b07400530d9e5a
+      size: 285307969
+    params:
+      params.yaml:
+        train.batch_size: 200
+        train.epochs: 10
+        train.learning_rate: 0.01
+        train.log_interval: 10
