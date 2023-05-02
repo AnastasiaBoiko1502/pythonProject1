@@ -28,3 +28,5 @@ stages:
       - train.learning_rate
       - train.epochs
       - train.log_interval
+    outs:
+      - data/accuracy.txt

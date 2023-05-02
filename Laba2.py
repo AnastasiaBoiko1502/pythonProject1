@@ -9,6 +9,7 @@ from torch.utils.data import TensorDataset, DataLoader
 import torchvision.transforms as transforms
 import csv
 import dvc.api
+import os
 
 params = dvc.api.params_show()
 
@@ -99,6 +100,18 @@ def create_nn(batch_size=200, learning_rate=0.01, epochs=10,
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         test_loss, correct, len(test_loader.dataset),
         100. * correct / len(test_loader.dataset)))
+    # вказуємо шлях до файлу, в який будемо зберігати Accuracy
+    file_path = os.path.join(os.getcwd(), 'accuracy.txt')
+
+    # відкриваємо файл для запису
+    with open(file_path, 'w') as f:
+        # записуємо Accuracy у файл
+        f.write('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+            test_loss, correct, len(test_loader.dataset),
+            100. * correct / len(test_loader.dataset)))
+
+
+
 
 create_nn(params['train']['batch_size'], params['train']['learning_rate'], params['train']['epochs'],
               params['train']['log_interval'])
