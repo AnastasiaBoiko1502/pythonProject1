@@ -105,8 +105,8 @@ with mlflow.start_run(run_name="MNIST_classificator") as run:
                 test_loss += criterion(net_out, target).item()
                 pred = net_out.data.max(1)[1]  # get the index of the max log-probability
                 correct += pred.eq(target.data).sum()
-                accuracy = correct / len(test_loader.dataset)
-                loss_test = test_loss / len(test_loader.dataset)
+                accuracy = correct
+                loss_test = test_loss
                 mlflow.log_metric("loss", loss_test, step=batch_idx)
                 mlflow.log_metric("accuracy", accuracy.item(), step=batch_idx)
 
@@ -128,37 +128,46 @@ with mlflow.start_run(run_name="MNIST_classificator") as run:
             mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/accuracy.txt")
 
             images, labels = next(iter(train_loader))
-            a = 0
-            plt.imshow(images[a].reshape(28, 28), cmap="gray")
-            print("Predicted: ", net(images[a].view(-1, 28 * 28)), "True: ", labels[a])
-            pathtoimg = 'C:/Users/boyan/PycharmProjects/pythonProject1/image.jpg'
-            plt.savefig(pathtoimg)
-            plt.show()
-            # Сохраняем изображение в файл
-            # Загружаем изображение в MLflow
-            img = load_img(pathtoimg, target_size=(224, 224))
-            img_filename = os.path.basename(pathtoimg)
+            for i in range(10):
+                plt.imshow(images[i].reshape(28, 28), cmap="gray")
+                print("Predicted:", net(images[i].view(-1, 28 * 28)), "True:", labels[i])
+                plt.savefig(f"C:/Users/boyan/PycharmProjects/pythonProject1/image_{i}.jpg")
+                plt.close()
 
-            new_image = Image.new('RGB', (img.width, img.height + 30), color='white')
-            new_image.paste(img, (0, 30))
-            # добавить заголовок
-            draw = ImageDraw.Draw(new_image)
-            font = ImageFont.truetype('arial.ttf', size=20)
-            text = f"Class: {labels[a]}"
-            text_width, text_height = draw.textsize(text, font)
-            x = (new_image.width - text_width) // 2
-            y = 0
-            draw.text((x, y), text, font=font, fill='black')
+            image_dir = os.path.join("C:/Users/boyan/PycharmProjects/pythonProject1")
+            for i in range(10):
+                img_path = os.path.join(image_dir, f"image_{i}.jpg")
+                img = load_img(img_path, target_size=(224, 224))
+                img_filename = os.path.basename(img_path)
+                new_image = Image.new('RGB', (img.width, img.height + 30), color='white')
+                new_image.paste(img, (0, 30))
+                draw = ImageDraw.Draw(new_image)
+                font = ImageFont.truetype('arial.ttf', size=20)
+                text = f"Predicted class: {labels[i]}"
+                text_width, text_height = draw.textsize(text, font)
+                x = (new_image.width - text_width) // 2
+                y = 0
+                draw.text((x, y), text, font=font, fill='black')
 
-            # сохранить изображение
-            class_dir = os.path.join("C:/Users/boyan/PycharmProjects/pythonProject1")
-            if not os.path.exists(class_dir):
-                os.makedirs(class_dir)
-            output_file = os.path.join(class_dir, f"mlflow_{img_filename}")
-            # output_file = os.path.join(class_dir)
-            new_image.save(output_file)
+                output_file = os.path.join(image_dir, f"mlflow_{img_filename}")
+                new_image.save(output_file)
+                class_dir = os.path.join("C:/Users/boyan/PycharmProjects/pythonProject1/image_result", str(labels[i]))
+                if not os.path.exists(class_dir):
+                    os.makedirs(class_dir)
+                output_file = os.path.join(class_dir, f"mlflow_{img_filename}")
+                new_image.save(output_file)
 
-            mlflow.log_artifact("mlflow_image.jpg")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(0)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(1)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(2)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(3)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(4)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(5)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(6)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(7)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(8)")
+                mlflow.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/image_result/tensor(9)")
 
+            #mlflow.log_artifact("mlflow_image.jpg")
 
     create_nn()
