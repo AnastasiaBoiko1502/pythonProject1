@@ -105,7 +105,8 @@ def create_nn(batch_size=200, learning_rate=0.01, epochs=10,log_interval=10):
     # Сохранение модели в формате .h5
     model_path = 'C:/Users/boyan/PycharmProjects/pythonProject1/model.h5'
     model.save(model_path)
-    wandb.log_artifact(model_path)
+    #wandb.log_artifact(model_path)
+    wandb.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/model.pth")
 
     # run a test loop
     test_loss = 0
@@ -138,6 +139,7 @@ def create_nn(batch_size=200, learning_rate=0.01, epochs=10,log_interval=10):
             test_loss, correct, len(test_loader.dataset),
             100. * correct / len(test_loader.dataset)))
     wandb.log_artifact("C:/Users/boyan/PycharmProjects/pythonProject1/accuracy.txt")
+
 
     images, labels = next(iter(train_loader))
     for i in range(10):
